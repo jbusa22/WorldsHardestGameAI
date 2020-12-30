@@ -1,73 +1,59 @@
-var tiles = []
-var tileSize = 50;
-var xoff = 0
-var yoff = 0
+import Game from './Game.js'
+import * as p5 from './libraries/p5';
 
-var rows = 10
-var cols = 20
-var canvasWidth = tileSize * cols
-var canvasHeight = tileSize * rows
-console.log(canvasHeight, canvasWidth)
-function setup() {
-  createCanvas(canvasWidth, canvasHeight)
+let s = (sk) => {    
 
-  for (var i = 0; i< rows; i++) {
-    tiles[i] = [];
-    for (var j = 0; j< cols; j++) {
-      tiles[i][j] = new Tile(j, i);
-    }
+  sk.setup = () =>{
+    sk.createCanvas(Game.canvasWidth, Game.canvasHeight)
+    console.log(Game)
+    Game.resetTiles()
+  }
+
+  sk.draw = () => {
+    sk.background(255,255,255)
+    Game.drawTiles()
+  }
+
+  sk.mousePressed = () => {
+    let selectedTile = Game.getTileFromCoords(sk.mouseX, sk.mouseY)
+    if (selectedTile)
+      Game.turnOnTile(selectedTile)
+  }
+
+  sk.mouseReleased = () => {
+    Game.clearDragging()
+  }
+
+  sk.mouseDragged = () => {
+    Game.mouseDragged(sk.mouseX, sk.mouseY)
   }
 }
+const P5 = new p5(s);
 
-function draw() {
-  background(255,255,255)
-  drawTiles()
-}
-var iClicked = 0
-var jClicked = 0
-var turnOn = false
-function mousePressed() {
-  if (mouseX > xoff && mouseX < xoff + canvasWidth 
-      && mouseY > yoff && mouseY < yoff + canvasHeight) {
-    iClicked = Math.floor(mouseY / tileSize)
-    jClicked = Math.floor(mouseX / tileSize)
-    turnOn = tiles[iClicked][jClicked].toggle();
-  }
-}
+// document.getElementById("update-col-rows").addEventListener("click", (e) => {
+//   let newRows = document.querySelector(".rows").value
+//   let newCols = document.querySelector(".cols").value
+//   if (newRows && newCols) {
+//     console.log(newRows, newCols)
+//     rows = newRows
+//     cols = newCols
+//     canvasWidth = tileSize * cols
+//     canvasHeight = tileSize * rows
+//     setup()
+//   }
+// })
 
-var dragging = false
-function mouseDragged() {
-  if (mouseX > xoff && mouseX < xoff + canvasWidth 
-      && mouseY > yoff && mouseY < yoff + canvasHeight) {
-    dragging = true
-    let i = Math.floor(mouseY / tileSize)
-    let j = Math.floor(mouseX / tileSize)
-    if (i != iClicked || j != jClicked) {
-      tiles[i][j].drag(turnOn);
-    }
-  } 
-}
+// document.querySelector(".start").addEventListener("click", (e) => {
+//   let newRows = document.querySelector(".rows").value
+//   let newCols = document.querySelector(".cols").value
+//   if (newRows && newCols) {
+//     console.log(newRows, newCols)
+//     Game.rows = newRows
+//     Game.cols = newCols
+//     Game.canvasWidth = tileSize * cols
+//     Game.canvasHeight = tileSize * rows
+//     P5.setup()
+//   }
+// })
 
-function mouseReleased() {
-  if (dragging) {
-    dragging = false
-    clearDragging()
-  }
-}
-
-function clearDragging() {
-  for (var i = 0; i< rows; i++) {
-    for (var j = 0; j< cols; j++) {
-      tiles[i][j].clearDrag();
-    }
-  }
-}
-
-// show all tiles
-function drawTiles() {
-  for (var i = 0; i< rows; i++) {
-    for (var j = 0; j< cols; j++) {
-      tiles[i][j].show();
-    }
-  }
-}
+export default P5;

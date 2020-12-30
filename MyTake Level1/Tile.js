@@ -1,7 +1,9 @@
-class Tile {
+import p5 from './sketch'
+import Game from './Game'
+export default class Tile {
   constructor(x, y) {
-    this.centerPoint = createVector(x,y)
-    this.pixelPos = createVector(x*tileSize+xoff, y*tileSize + yoff)
+    this.centerPoint = p5.createVector(x,y)
+    this.pixelPos = p5.createVector(x*Game.tileSize+Game.xoff, y*Game.tileSize + Game.yoff)
     this.toggled = false
     this.dragChanged = false
     if ((this.centerPoint.x +this.centerPoint.y) % 2 ==0) {
@@ -16,24 +18,27 @@ class Tile {
       this.blue = 255
     }
   }
+
   show(){
-    fill(this.red,this.green,this.blue);
-    noStroke()
-    rect(this.pixelPos.x, this.pixelPos.y, tileSize, tileSize)
+    p5.fill(this.red,this.green,this.blue);
+    p5.noStroke()
+    p5.rect(this.pixelPos.x, this.pixelPos.y, Game.tileSize, Game.tileSize)
   }
+
   drag(turnOn) {
     if (!this.dragChanged && this.toggled != turnOn) {
       this.toggle()
       this.dragChanged = true
     }
   }
+
   clearDrag() {
     this.dragChanged = false
   }
+
   toggle() {
       this.toggled = !this.toggled
       this.red = this.toggled ? 0 : this.unSelectedRed
       return this.toggled
   }
-
 }

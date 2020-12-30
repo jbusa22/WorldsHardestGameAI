@@ -263,6 +263,7 @@ function writeShit(){
   }
 }
 function keyPressed(){
+  console.log(tiles)
   if(humanPlaying){
     switch(keyCode) {
     case UP_ARROW:
