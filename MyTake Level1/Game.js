@@ -1,5 +1,5 @@
 import Tile from './Tile'
-
+import Player from './Player'
 class Game {
   constructor(){
     if(!Game.instance){
@@ -15,6 +15,9 @@ class Game {
       this.jClicked = 0
       this.turnOn = false
       this.dragging = false
+      this.editing = true
+      this.playerSize = 20
+      this.typeSelected = 'wall'
       Game.instance = this;
     }
     return Game.instance;
@@ -37,6 +40,12 @@ class Game {
     }
   }
 
+  drawPlayer() {
+    if (this.player) {
+      this.player.show()
+    }
+  }
+
   getTileFromCoords(mouseX, mouseY) {
     if (this.inBounds(mouseX, mouseY)) {
       this.iClicked = Math.floor(mouseY / this.tileSize)
@@ -46,7 +55,7 @@ class Game {
   }
   
   turnOnTile(selectedTile) {
-    this.turnOn = selectedTile.toggle();
+    selectedTile.changeType(this.typeSelected);
   }
   
   clearDragging() {
@@ -73,10 +82,41 @@ class Game {
       let i = Math.floor(mouseY / this.tileSize)
       let j = Math.floor(mouseX / this.tileSize)
       if (i != this.iClicked || j != this.jClicked) {
-        this.tiles[i][j].drag(this.turnOn);
+        this.tiles[i][j].drag(this.typeSelected);
       }
     }
   }
+
+  setup() {
+    this.editing = false
+    this.spawnPlayer()
+  }
+
+  changeTypeSelected(newType) {
+    this.typeSelected = newType
+  }
+
+  spawnPlayer() {
+    if (this.editing) {
+      return
+    }
+    let randomSpawnTile = this.getRandomSpawnTile()
+    
+    this.player = new Player(randomSpawnTile)
+    console.log(this.player)
+  }
+
+  getRandomSpawnTile() {
+    let spawnTiles = []
+    for (var i = 0; i< this.rows; i++) {
+      for (var j = 0; j< this.cols; j++) {
+        if (this.tiles[i][j].type == 'start')
+          spawnTiles.push(this.tiles[i][j])
+      }
+    }
+    return spawnTiles[Math.floor(Math.random() * spawnTiles.length)]
+  }
+
 }
 
 
