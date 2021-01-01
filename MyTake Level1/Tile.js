@@ -66,4 +66,7 @@ export default class Tile {
         break;
     }
   }
+  serializeCoords() {
+    return this.centerPoint.y * Game.cols + this.centerPoint.x
+  }
 }

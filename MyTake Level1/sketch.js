@@ -1,6 +1,8 @@
 import Game from './Game.js'
 import * as p5 from './libraries/p5';
 import * as listeners from './setting_level' 
+import calculateDistance from './Node'
+
 // need to import listeners for webpack to add this to bundle
 
 let s = (sk) => {    
@@ -8,6 +10,7 @@ let s = (sk) => {
   sk.setup = () =>{
     sk.createCanvas(Game.canvasWidth, Game.canvasHeight)
     Game.resetTiles()
+    calculateDistance(Game.tiles[0][0])
   }
 
   sk.draw = () => {
@@ -35,5 +38,7 @@ let s = (sk) => {
   }
 }
 const P5 = new p5(s);
+
+
 
 export default P5;

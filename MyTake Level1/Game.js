@@ -1,5 +1,6 @@
 import Tile from './Tile'
 import Player from './Player'
+import createGraph from './Graph'
 class Game {
   constructor(){
     if(!Game.instance){
@@ -17,6 +18,7 @@ class Game {
       this.dragging = false
       this.editing = true
       this.playerSize = 20
+      this.defaultWeight = 100
       this.typeSelected = 'wall'
       Game.instance = this;
     }
@@ -76,6 +78,25 @@ class Game {
         && mouseY > this.yoff && mouseY < this.yoff + this.canvasHeight
   }
 
+  // creates an object like so {12:100,13:100}
+  getAdjacentWalkableTilesAndWeights(i, j) {
+    let adjacentTiles = {}
+    let diffs = [[-1 , 0], [1, 0], [0, -1], [0, 1]]
+    for (let k = 0; k < diffs.length; k++) {
+      let newI = i + diffs[k][0]
+      let newJ = j + diffs[k][1]
+      if (tileInBounds(newI, newJ) && this.tiles[newI][newJ].type != 'wall') {
+        let serializedCoords = newI * this.cols + newJ
+        adjacentTiles[serializedCoords] = this.defaultWeight
+      }
+    }
+    return adjacentTiles
+  }
+
+  tileInBounds(i, j) {
+    return i >= 0 && i < this.rows && j >= 0 && j < this.cols
+  }
+
   mouseDragged(mouseX, mouseY) {
     if (this.inBounds(mouseX, mouseY)) {
       this.dragging = true
@@ -85,11 +106,14 @@ class Game {
         this.tiles[i][j].drag(this.typeSelected);
       }
     }
+    
   }
 
   setup() {
     this.editing = false
     this.spawnPlayer()
+    let graph = createGraph()
+    console.log(graph)
   }
 
   changeTypeSelected(newType) {
@@ -115,6 +139,19 @@ class Game {
       }
     }
     return spawnTiles[Math.floor(Math.random() * spawnTiles.length)]
+  }
+  
+  initializeDis(deathTile) {
+    let initial = []
+    let keys = this.graph.keys()
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i] == deathTile.serializeCoords()) {
+        initial.push(0)
+      } else {
+        initial.push(Infinity)
+      }
+    }
+    return initial
   }
 
 }
