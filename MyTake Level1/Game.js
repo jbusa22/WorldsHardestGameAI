@@ -21,6 +21,7 @@ class Game {
       this.defaultWeight = 100
       this.typeSelected = 'wall'
       this.graph = null
+      this.player = null
       Game.instance = this;
     }
     return Game.instance;
@@ -40,6 +41,12 @@ class Game {
       for (var j = 0; j< this.cols; j++) {
         this.tiles[i][j].show();
       }
+    }
+  }
+
+  updatePlayer() {
+    if (this.player) {
+      this.player.update()
     }
   }
 
@@ -114,7 +121,6 @@ class Game {
     this.editing = false
     this.graph = createGraph()
     this.spawnPlayer()
-    
   }
 
   changeTypeSelected(newType) {
@@ -128,8 +134,28 @@ class Game {
     let randomSpawnTile = this.getRandomSpawnTile()
     
     this.player = new Player(randomSpawnTile)
-    console.log(this.player)
   }
+  
+  // restrictMovement(tl, br, movement) {
+
+  //   var x = movement.x;
+  //   var y = movement.y;
+
+  //   var ptl = p5.createVector(tl.x+movement.x, tl.y);
+  //   var pbr = p5.createVector(br.x+movement.x, br.y);
+
+  //   if ((ptl.x < this.bottomRightPos.x && pbr.x > this.pixelPos.x) &&( ptl.y < this.bottomRightPos.y && pbr.y > this.pixelPos.y)) {
+  //     x=0;
+  //   }
+
+  //   ptl = p5.createVector(tl.x, tl.y +movement.y);
+  //   pbr = p5.createVector(br.x, br.y + movement.y);
+  //   if ((ptl.x <this.bottomRightPos.x && pbr.x > this.pixelPos.x) &&( ptl.y < this.bottomRightPos.y && pbr.y > this.pixelPos.y)) {
+  //     y=0;
+  //   }
+
+  //   return p5.createVector(x, y);
+  // }
 
   getRandomSpawnTile() {
     let spawnTiles = []
@@ -155,6 +181,20 @@ class Game {
     return initial
   }
 
+  getSurroundingWalls(tile) {
+    let surroundingWalls = []
+    if (tile.type == 'wall')
+      surroundingWalls.push(tile)
+    let diffs = [[-1, 0], [-1, -1], [-1, 1], [1, 1], [1, -1], [1, 0], [0, -1], [0, 1]]
+    for (let k = 0; k < diffs.length; k++) {
+      let newJ = tile.centerPoint.x + diffs[k][0]
+      let newI = tile.centerPoint.y + diffs[k][1]
+      if (this.tileInBounds(newI, newJ) && this.tiles[newI][newJ].type == 'wall') {
+        surroundingWalls.push(this.tiles[newI][newJ])
+      }
+    }
+    return surroundingWalls
+  }
 }
 
 

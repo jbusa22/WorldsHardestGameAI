@@ -24,9 +24,9 @@ export default function dijkstras(deathTile) {
   console.log(nodeDistances)
   for (let i = 0; i < nodeDistances.length; i++) {
     let el = nodeDistances[i]
-    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].blue = Math.floor(el / 2500 * 255)
-    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].green = Math.floor(el / 2500 * 255)
-    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].red = Math.floor(el / 2500 * 255)
+    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].blue = Math.floor(el / 1000 * 255)
+    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].green = Math.floor(el / 1000 * 255)
+    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].red = Math.floor(el / 1000 * 255)
   }
   return nodeDistances
 }

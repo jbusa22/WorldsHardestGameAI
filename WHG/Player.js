@@ -57,6 +57,7 @@ class Player{
     temp.normalize();
     temp.mult(this.playerSpeed);
     for (var i = 0; i< solids.length; i++) {
+      debugger
       temp = solids[i].restrictMovement(this.pos, createVector(this.pos.x+this.size, this.pos.y+this.size), temp);
     }
     this.pos.add(temp);

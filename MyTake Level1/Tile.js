@@ -4,6 +4,7 @@ export default class Tile {
   constructor(x, y) {
     this.centerPoint = p5.createVector(x,y)
     this.pixelPos = p5.createVector(x*Game.tileSize+Game.xoff, y*Game.tileSize + Game.yoff)
+    this.bottomRightPos = p5.createVector(x*Game.tileSize+ Game.tileSize+Game.xoff, y*Game.tileSize + Game.yoff + Game.tileSize)
     this.type = 'walkable'
     this.dragChanged = false
     this.red = 0
@@ -66,7 +67,29 @@ export default class Tile {
         break;
     }
   }
+  
   serializeCoords() {
     return this.centerPoint.y * Game.cols + this.centerPoint.x
+  }
+
+  restrictMovement(tl, br, movement) {
+
+    var x = movement.x;
+    var y = movement.y;
+
+    var ptl = p5.createVector(tl.x+movement.x, tl.y);
+    var pbr = p5.createVector(br.x+movement.x, br.y);
+
+    if ((ptl.x < this.bottomRightPos.x && pbr.x > this.pixelPos.x) &&( ptl.y < this.bottomRightPos.y && pbr.y > this.pixelPos.y)) {
+      x=0;
+    }
+
+    ptl = p5.createVector(tl.x, tl.y +movement.y);
+    pbr = p5.createVector(br.x, br.y + movement.y);
+    if ((ptl.x <this.bottomRightPos.x && pbr.x > this.pixelPos.x) &&( ptl.y < this.bottomRightPos.y && pbr.y > this.pixelPos.y)) {
+      y=0;
+    }
+
+    return p5.createVector(x, y);
   }
 }

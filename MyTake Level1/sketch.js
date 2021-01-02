@@ -16,6 +16,7 @@ let s = (sk) => {
   sk.draw = () => {
     sk.background(255,255,255)
     Game.drawTiles()
+    Game.updatePlayer()
     Game.drawPlayer()
   }
 
