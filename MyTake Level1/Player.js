@@ -26,6 +26,15 @@ export default class Player {
     p5.rect(this.center.x, this.center.y, Game.playerSize, Game.playerSize)
   }
 
+  setVel(x, y) {
+    if (!this.dead) {
+      if (this.vel.x + x < this.playerSpeed && this.vel.x + x > -this.playerSpeed)
+        this.vel.x += x
+      if (this.vel.y + y < this.playerSpeed && this.vel.y + y > -this.playerSpeed)
+        this.vel.y += y
+    }
+  }
+
   move() {
     // Change velocity every moveRate amount of frames
     if (this.moveCount == this.moveRate) {
@@ -55,6 +64,7 @@ export default class Player {
   }
   
   die() {
+    this.dead = true
     this.vel = p5.createVector(0, 0)
     calculateDistance(Game.getTileFromCoords(this.center.x, this.center.y))
   }
@@ -62,6 +72,7 @@ export default class Player {
   checkReachedGoal() {
     if (Game.getTileFromCoords(this.center.x, this.center.y).type == 'goal') {
       this.reachedGoal = true
+      this.vel = p5.createVector(0, 0)
     }
   }
 

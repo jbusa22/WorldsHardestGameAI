@@ -1,5 +1,6 @@
 import Tile from './Tile'
 import Player from './Player'
+import HumanPlayer from './HumanPlayer'
 import createGraph from './Graph'
 class Game {
   constructor(){
@@ -22,6 +23,7 @@ class Game {
       this.typeSelected = 'wall'
       this.graph = null
       this.player = null
+      this.humanPlaying = false
       Game.instance = this;
     }
     return Game.instance;
@@ -120,6 +122,7 @@ class Game {
   setup() {
     this.editing = false
     this.graph = createGraph()
+    this.humanPlaying = true
     this.spawnPlayer()
   }
 
@@ -132,8 +135,32 @@ class Game {
       return
     }
     let randomSpawnTile = this.getRandomSpawnTile()
+    if (this.humanPlaying) {
+      this.player = new HumanPlayer(randomSpawnTile)
+    } else {
+      this.player = new Player(randomSpawnTile)
+    }
+  }
+
+  showDistancesOnTiles(nodeDistances) {
+    let maxDist = 1 
+    for (let i = 0; i < nodeDistances.length; i++) {
+      const el = nodeDistances[i];
+      if (el != Infinity && el > maxDist) {
+        maxDist = el
+      }
+    }
     
-    this.player = new Player(randomSpawnTile)
+    for (let i = 0; i < nodeDistances.length; i++) {
+      let el = nodeDistances[i]
+      let val = Math.floor(el / (maxDist + 100) * 255)
+      let tile = this.tiles[Math.floor(i / this.cols)][i % this.cols]
+      if (tile.type != "goal") {
+        tile.blue = val
+        tile.green = val
+        tile.red = val
+      }
+    }
   }
   
   // restrictMovement(tl, br, movement) {
