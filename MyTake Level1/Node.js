@@ -8,20 +8,25 @@ export default function dijkstras(deathTile) {
   nodeDistances.forEach((e, i) => {
     pq.add(i,e)
   });
-  debugger
-  while (pq.length > 0) {
+  while (pq.length() > 0) {
     let [smallestIndex, smallestDistance] = pq.pop()
     visited.add(smallestIndex)
     nodeDistances[smallestIndex] = smallestDistance
     // update distances of adjacent tiles
     let adjacentTiles = Game.getAdjacentWalkableTilesAndWeights(
-      Math.floor(smallestIndex / Game.rows), smallestIndex % Game.rows
+      Math.floor(smallestIndex / Game.cols), smallestIndex % Game.cols
     )
-    let adjacentTileKeys = adjacentTiles.keys()
+    let adjacentTileKeys = Object.keys(adjacentTiles)
     for (let i = 0; i < adjacentTileKeys.length; i++) {
-      pq.changePriority(adjacentTileKeys[i], smallestDistance + adjacentTiles[adjacentTileKeys])
+      pq.changePriority(Number(adjacentTileKeys[i]), smallestDistance + adjacentTiles[adjacentTileKeys[i]])
     }
   }
   console.log(nodeDistances)
+  for (let i = 0; i < nodeDistances.length; i++) {
+    let el = nodeDistances[i]
+    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].blue = Math.floor(el / 2500 * 255)
+    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].green = Math.floor(el / 2500 * 255)
+    Game.tiles[Math.floor(i / Game.cols)][i % Game.cols].red = Math.floor(el / 2500 * 255)
+  }
   return nodeDistances
 }

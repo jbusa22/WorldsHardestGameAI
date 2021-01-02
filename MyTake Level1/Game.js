@@ -20,6 +20,7 @@ class Game {
       this.playerSize = 20
       this.defaultWeight = 100
       this.typeSelected = 'wall'
+      this.graph = null
       Game.instance = this;
     }
     return Game.instance;
@@ -85,7 +86,7 @@ class Game {
     for (let k = 0; k < diffs.length; k++) {
       let newI = i + diffs[k][0]
       let newJ = j + diffs[k][1]
-      if (tileInBounds(newI, newJ) && this.tiles[newI][newJ].type != 'wall') {
+      if (this.tileInBounds(newI, newJ) && this.tiles[newI][newJ].type != 'wall') {
         let serializedCoords = newI * this.cols + newJ
         adjacentTiles[serializedCoords] = this.defaultWeight
       }
@@ -111,9 +112,9 @@ class Game {
 
   setup() {
     this.editing = false
+    this.graph = createGraph()
     this.spawnPlayer()
-    let graph = createGraph()
-    console.log(graph)
+    
   }
 
   changeTypeSelected(newType) {
@@ -143,7 +144,7 @@ class Game {
   
   initializeDis(deathTile) {
     let initial = []
-    let keys = this.graph.keys()
+    let keys = Object.keys(this.graph)
     for (let i = 0; i < keys.length; i++) {
       if (keys[i] == deathTile.serializeCoords()) {
         initial.push(0)

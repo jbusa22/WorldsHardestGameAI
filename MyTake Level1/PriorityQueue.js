@@ -61,8 +61,6 @@
 //   }
 // }
 
-import { debug } from "webpack";
-
 
 /**
  * A priority queue stores a list of items but each can have a numeric priority value.
@@ -152,7 +150,6 @@ PriorityQueue.prototype.changePriority = function(value, newPriority) {
 	//using only one for..in.. loop which is better for performance as compared to foreach..no need to have 2 foreach 
 	for (let priority in self.store){
     let index = self.store[priority].indexOf(value); // Get the index of value from inside the array inside the priority
-    debugger
 		if(index>=0 && priority > newPriority){ // if value exists
 			if(self.store[priority].length>1){
 				self.store[priority].splice(index, 1);  // remove the item  //

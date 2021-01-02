@@ -10,6 +10,7 @@ export default class Player {
     this.red = 69
     this.green = 105
     this.blue = 144
+    this.die()
   }
   
   show() {
@@ -19,6 +20,6 @@ export default class Player {
   }
   
   die() {
-    // calculateDistance(Game.getTileFromCoords(this.center.x, this.center.y))
+    calculateDistance(Game.getTileFromCoords(this.center.x, this.center.y))
   }
 }

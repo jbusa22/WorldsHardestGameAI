@@ -5,7 +5,7 @@
   "main": "sketch.js",
   "scripts": {
     "babel": "babel --presets es2015 js/main.js -o build/main.bundle.js",
-    "start": "http-server",
+    "start": "webpack serve",
     "webpack": "webpack",
     "startdev": "webpack serve --devtool source-map --mode development --env development --hot --port 3000"
   },
@@ -20,11 +20,15 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "babel-loader": "^8.2.2",
-    "webpack": "^5.11.1",
-    "webpack-cli": "^4.3.0",
-    "webpack-dev-server": "^3.11.1"
+    "webpack": "^5.6.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "p5": "^1.2.0"
+    "@babel/polyfill": "^7.12.1",
+    "babel-polyfill": "^6.26.0",
+    "fs": "0.0.1-security",
+    "p5": "^1.2.0",
+    "worker-threads": "^1.0.0"
   }
 }
