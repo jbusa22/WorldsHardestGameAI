@@ -1,9 +1,6 @@
 import Game from './Game.js'
 import * as p5 from './libraries/p5';
 import * as listeners from './setting_level' 
-
-import calculateDistance from './Node'
-
 // need to import listeners for webpack to add this to bundle
 
 let s = (sk) => {    
@@ -16,8 +13,12 @@ let s = (sk) => {
   sk.draw = () => {
     sk.background(255,255,255)
     Game.drawTiles()
-    Game.updatePlayer()
-    Game.drawPlayer()
+    if (!Game.editing && Game.humanPlaying) {
+      Game.updatePlayer()
+      Game.drawPlayer()
+    } else if (!Game.editing) {
+      Game.trainNormally()
+    }
   }
 
   sk.mousePressed = () => {

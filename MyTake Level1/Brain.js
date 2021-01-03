@@ -1,4 +1,5 @@
 import p5 from './sketch'
+import Game from './Game'
 export default class Brain {
   constructor (size) {
     this.directions = []
@@ -19,6 +20,22 @@ export default class Brain {
   populateDirections(size) {
     for (let i = 0; i < size; i++) {
       this.directions.push(this.getRandomDirection())
+    }
+  }
+
+  //mutates the brain by setting some of the directions to random vectors
+  mutate(died, deathStep) {
+    //chance that any vector in directions gets changed
+    for (var i =0; i< this.directions.length; i++) {
+      var rand = Math.random();
+      if (died && i > deathStep - 10) {
+        rand = Math.random() * 0.2;
+      }
+
+      if (rand < Game.mutationRate) {
+        //set this direction as a random direction
+        this.directions[i] = this.getRandomDirection();
+      }
     }
   }
 
@@ -47,5 +64,21 @@ export default class Brain {
     }
 
     return p5.createVector();
+  }
+
+  increaseMoves() {
+    for(var i = 0 ; i< 5 ;i++) {
+      this.directions.push(this.getRandomDirection());
+    }
+  }
+
+  clone() {
+    // check this
+    let clonedBaby = new Brain(this.directions.length)
+    for (let i = 0; i < this.directions.length; i++) {
+      clonedBaby.directions[i] = this.directions[i].copy();
+    }
+    clonedBaby.step = 0
+    return clonedBaby
   }
 }

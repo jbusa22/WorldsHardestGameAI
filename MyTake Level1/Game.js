@@ -2,6 +2,7 @@ import Tile from './Tile'
 import Player from './Player'
 import HumanPlayer from './HumanPlayer'
 import createGraph from './Graph'
+import Population from './Population';
 class Game {
   constructor(){
     if(!Game.instance){
@@ -24,6 +25,11 @@ class Game {
       this.graph = null
       this.player = null
       this.humanPlaying = false
+      this.populationSize = 100
+      this.evolutionSpeed = 1
+      this.testPopulation = null
+      this.mutationRate = 0.01;
+      this.dieOnWall = true
       Game.instance = this;
     }
     return Game.instance;
@@ -116,13 +122,11 @@ class Game {
         this.tiles[i][j].drag(this.typeSelected);
       }
     }
-    
   }
 
   setup() {
     this.editing = false
     this.graph = createGraph()
-    this.humanPlaying = true
     this.spawnPlayer()
   }
 
@@ -130,15 +134,27 @@ class Game {
     this.typeSelected = newType
   }
 
+  getGoalTiles() {
+    let goalTiles = []
+    for (var i = 0; i< this.rows; i++) {
+      for (var j = 0; j< this.cols; j++) {
+        if (this.tiles[i][j].type == 'goal')
+          goalTiles.push(this.tiles[i][j])
+      }
+    }
+    return goalTiles
+  }
+
   spawnPlayer() {
     if (this.editing) {
       return
     }
-    let randomSpawnTile = this.getRandomSpawnTile()
+    
     if (this.humanPlaying) {
+      let randomSpawnTile = this.getRandomSpawnTile()
       this.player = new HumanPlayer(randomSpawnTile)
     } else {
-      this.player = new Player(randomSpawnTile)
+      this.testPopulation = new Population(100)
     }
   }
 
@@ -221,6 +237,40 @@ class Game {
       }
     }
     return surroundingWalls
+  }
+
+
+  trainNormally() {
+    if (this.testPopulation.allPlayersDead()) {
+      //genetic algorithm
+      this.testPopulation.calculateFitness();
+      this.testPopulation.naturalSelection();
+      this.testPopulation.mutateDemBabies();
+      //reset dots
+    //  resetDots();
+
+      //every 5 generations incease the number of moves by 5
+      if (this.testPopulation.gen % 5 ==0) {
+        this.testPopulation.increaseMoves();
+      }
+
+    } else {
+
+      // moveAndShowDots();
+      //update and show population
+
+      for(var j = 0 ; j < this.evolutionSpeed; j++){
+        // for (var i = 0; i < dots.length; i ++) {
+        //   dots[i].move();
+        // }
+        this.testPopulation.update();
+      }
+
+      // for (var i = 0; i < dots.length; i ++) {
+      //   dots[i].show();
+      // }
+      this.testPopulation.show();
+    }
   }
 }
 

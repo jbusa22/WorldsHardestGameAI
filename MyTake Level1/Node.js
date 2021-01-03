@@ -21,6 +21,5 @@ export default function dijkstras(deathTile) {
       pq.changePriority(Number(adjacentTileKeys[i]), smallestDistance + adjacentTiles[adjacentTileKeys[i]])
     }
   }
-  console.log(nodeDistances)
   return nodeDistances
 }
