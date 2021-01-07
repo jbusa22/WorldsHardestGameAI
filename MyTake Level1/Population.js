@@ -1,5 +1,7 @@
 import Game from './Game'
 import Player from './Player'
+import calculateDistance from './Node'
+import {updateDistGoal, updateGen} from './StatTracking'
 export default class Population {
 
   constructor(size) {
@@ -35,7 +37,7 @@ export default class Population {
    update() {
     for (var i = 0; i < this.players.length; i++) {
       if (this.players[i].brain.step > this.minStep) {//if the player has already taken more steps than the best player has taken to reach the goal
-        this.players[i].die()//then it dead
+        this.players[i].die(false)//then it dead
       } else {
         this.players[i].update();
       }
@@ -150,11 +152,16 @@ export default class Population {
       }
     }
 
+    this.bestPlayer = maxIndex;
     if (maxIndex === -1) {
       alert("Make sure the course is possible to complete")
+    } else {
+      let dist = calculateDistance(this.players[this.bestPlayer].deathTile)
+      Game.showDistancesOnTiles(dist)
+      updateDistGoal(this.players[this.bestPlayer].getDistanceToClosestGoal() / Game.defaultWeight)
+      updateGen(this.players[this.bestPlayer].gen)
     }
     
-    this.bestPlayer = maxIndex;
     if (max > this.bestFitness) {
       this.bestFitness = max;
       this.genPlayers.push(this.players[this.bestPlayer].gimmeBaby());

@@ -101,4 +101,37 @@ export default class Tile {
 
     return p5.createVector(x, y);
   }
+
+  getRelativeTile(x, y) {
+    if (this.centerPoint.x + x > Game.cols || this.centerPoint.x + x < 0 || 
+        this.centerPoint.y + y > Game.rows || this.centerPoint.y + y < 0) {
+          return null
+    }
+    return Game.tiles[this.centerPoint.y + y][this.centerPoint.x + x]
+  }
+
+  showEdges(){
+    let diffs = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+    for (let i = 0; i < diffs.length; i++) {
+      const tile = this.getRelativeTile(diffs[i][0], diffs[i][1]);
+      if (tile && tile.type === 'wall') {
+        p5.stroke(0);
+        p5.strokeWeight(4);
+        switch(i) {
+          case 0:
+            p5.line(this.pixelPos.x, this.pixelPos.y, this.pixelPos.x, this.pixelPos.y+Game.tileSize);
+            break;
+          case 1:
+            p5.line(this.pixelPos.x+Game.tileSize, this.pixelPos.y, this.pixelPos.x+Game.tileSize, this.pixelPos.y+Game.tileSize);
+            break;
+          case 2:
+            p5.line(this.pixelPos.x, this.pixelPos.y, this.pixelPos.x+Game.tileSize,this.pixelPos.y);
+            break;
+          case 3:
+            p5.line(this.pixelPos.x, this.pixelPos.y + Game.tileSize, this.pixelPos.x+ Game.tileSize, this.pixelPos.y + Game.tileSize);
+            break;
+        }
+      }
+    }
+  }
 }

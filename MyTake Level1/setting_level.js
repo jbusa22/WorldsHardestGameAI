@@ -23,6 +23,10 @@ document.getElementById("walls-kill").addEventListener("click", (e) => {
   }
 })
 
+document.getElementById("show-best").addEventListener("click", (e) => {
+  Game.showBest = !Game.showBest
+})
+
 
 document.getElementById("update-col-rows").addEventListener("click", (e) => {
   let newRows = Number(document.querySelector(".rows").value) + 2

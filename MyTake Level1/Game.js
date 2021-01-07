@@ -4,8 +4,8 @@ import HumanPlayer from './HumanPlayer'
 import createGraph from './Graph'
 import Population from './Population';
 class Game {
-  constructor(){
-    if(!Game.instance){
+  constructor() {
+    if(!Game.instance) {
       this.tiles = [];
       this.tileSize = 50;
       this.xoff = 0;
@@ -19,17 +19,19 @@ class Game {
       this.turnOn = false
       this.dragging = false
       this.editing = true
-      this.playerSize = 30
-      this.wallsKill = true
-      this.defaultWeight = 100
+      this.playerSize = 20
+      this.wallsKill = false
+      this.defaultWeight = 10
       this.typeSelected = 'wall'
+      this.showBest = false
       this.graph = null
       this.player = null
       this.humanPlaying = false
-      this.populationSize = 10
+      this.populationSize = 200
+      this.showDeathPath = true
       this.evolutionSpeed = 1
       this.testPopulation = null
-      this.mutationRate = 0.01;
+      this.mutationRate = 0.02;
       this.playerImage = null
       Game.instance = this;
     }
@@ -44,18 +46,18 @@ class Game {
   }
 
   resetTiles() {
-    for (var i = 0; i< this.rows; i++) {
+    for (var i = 0; i < this.rows; i++) {
       this.tiles[i] = [];
       for (var j = 0; j< this.cols; j++) {
         this.tiles[i][j] = new Tile(j, i);
       }
     }
     // set walls
-    for (var i = 0; i< this.rows; i++) {
+    for (var i = 0; i < this.rows; i++) {
       this.tiles[i][0].setEdge()
       this.tiles[i][this.cols - 1].setEdge()
     }
-    for (var j = 0; j< this.cols; j++) {
+    for (var j = 0; j < this.cols; j++) {
       this.tiles[0][j].setEdge()
       this.tiles[this.rows - 1][j].setEdge()
     }
@@ -66,9 +68,18 @@ class Game {
   }
 
   drawTiles() {
-    for (var i = 0; i< this.rows; i++) {
-      for (var j = 0; j< this.cols; j++) {
+    for (var i = 0; i < this.rows; i++) {
+      for (var j = 0; j < this.cols; j++) {
         this.tiles[i][j].show();
+      }
+    }
+  }
+  
+  drawEdges() {
+    for (var i = 0; i < this.rows; i++) {
+      for (var j = 0; j < this.cols; j++) {
+        if (this.tiles[i][j].type !== 'wall')
+          this.tiles[i][j].showEdges();
       }
     }
   }
@@ -103,8 +114,8 @@ class Game {
     }
     
     this.dragging = false
-    for (var i = 0; i< this.rows; i++) {
-      for (var j = 0; j< this.cols; j++) {
+    for (var i = 0; i < this.rows; i++) {
+      for (var j = 0; j < this.cols; j++) {
         this.tiles[i][j].clearDrag();
       }
     }
@@ -157,8 +168,8 @@ class Game {
 
   getGoalTiles() {
     let goalTiles = []
-    for (var i = 0; i< this.rows; i++) {
-      for (var j = 0; j< this.cols; j++) {
+    for (var i = 0; i < this.rows; i++) {
+      for (var j = 0; j < this.cols; j++) {
         if (this.tiles[i][j].type == 'goal')
           goalTiles.push(this.tiles[i][j])
       }

@@ -15,6 +15,7 @@ let s = (sk) => {
   sk.draw = () => {
     sk.background(255,255,255)
     Game.drawTiles()
+    Game.drawEdges()
     if (!Game.editing && Game.humanPlaying) {
       Game.updatePlayer()
       Game.drawPlayer()
@@ -77,7 +78,7 @@ let s = (sk) => {
     }
   }
 }
-const P5 = new p5(s);
+const P5 = new p5(s, 'wow');
 
 // function keyPressed(){
 //   if(humanPlaying){

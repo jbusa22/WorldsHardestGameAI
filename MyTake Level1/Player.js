@@ -5,13 +5,12 @@ import calculateDistance from './Node'
 export default class Player {
   
   constructor(startingTile) {
-    let rx = Math.abs(Math.random() * Game.tileSize - Game.playerSize)
-    let ry = Math.abs(Math.random() * Game.tileSize - Game.playerSize)
-    this.center = p5.createVector(startingTile.pixelPos.x + rx,startingTile.pixelPos.y + ry)
+    this.center = p5.createVector(startingTile.pixelPos.x + Game.tileSize / 2 - Game.playerSize / 2,startingTile.pixelPos.y + Game.tileSize / 2 - Game.playerSize / 2)
     this.playerSpeed = Game.tileSize/15.0;
     this.startingTile = startingTile
     this.vel = p5.createVector(0,0)
     this.red = 69
+    this.deathTile = null
     this.green = 105
     this.blue = 144
     this.dead = false
@@ -47,7 +46,7 @@ export default class Player {
       if (this.brain.hasStepsLeft()) {
         this.vel = this.brain.nextVel()
       } else {
-        this.die()
+        this.die(false)
       }
     } else {
       this.moveCount++
@@ -65,7 +64,7 @@ export default class Player {
       if (Game.wallsKill) {
         const el = surroundingWalls[i].restrictMovement(this.center, bottomRight, temp);
         if (temp.x != el.x || temp.y != el.y)
-          this.die()
+          this.die(true)
       } else {
         const el = surroundingWalls[i]
         temp = el.restrictMovement(this.center, bottomRight, temp)
@@ -74,9 +73,10 @@ export default class Player {
     this.center.add(temp)
   }
   
-  die() {
+  die(collision) {
     this.dead = true
     this.deathAtStep = this.brain.step
+    this.deathTile = Game.getTileFromCoords(this.center.x + this.vel.x *-1, this.center.y + this.vel.y *-1)
     this.vel = p5.createVector(0, 0)
   }
 
@@ -94,8 +94,31 @@ export default class Player {
     }
   }
 
+  getNearestWalkableTile() {
+    let attempt = Game.getTileFromCoords(this.center.x, this.center.y)
+    if (attempt.type !== 'wall')
+      return attempt
+
+    
+    if (Math.abs(attempt.pixelPos.x - this.center.x) <  Math.abs(attempt.pixelPos.y - this.center.y)) {
+      let bl = p5.createVector(attempt.pixelPos.x, attempt.pixelPos.y + Game.tileSize)
+      if (Math.abs(bl.x - this.center.x) >  Math.abs(bl.y - this.center.y)) {
+        return Game.tiles[attempt.centerPoint.y + 1][attempt.centerPoint.x]
+      } else {
+        return Game.tiles[attempt.centerPoint.y][attempt.centerPoint.x - 1]
+      }
+    } else {
+      let tr = p5.createVector(attempt.pixelPos.x + Game.tileSize, attempt.pixelPos.y)
+      if (Math.abs(tr.x - this.center.x) >  Math.abs(tr.y - this.center.y)) {
+        return Game.tiles[attempt.centerPoint.y - 1][attempt.centerPoint.x]
+      } else {
+        return Game.tiles[attempt.centerPoint.y][attempt.centerPoint.x + 1]
+      }
+    }
+  }
+
   getDistanceToClosestGoal() {
-    let distances = calculateDistance(Game.getTileFromCoords(this.center.x, this.center.y));
+    let distances = calculateDistance(this.deathTile);
     let goalTiles = Game.getGoalTiles()
     let smallestDist = Infinity
     for (let i = 0; i < goalTiles.length; i++) {
