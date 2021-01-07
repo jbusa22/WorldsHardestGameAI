@@ -1,6 +1,7 @@
 import Game from './Game.js'
 import * as p5 from './libraries/p5';
 import * as listeners from './setting_level' 
+import img from './nugget.png'
 // need to import listeners for webpack to add this to bundle
 
 let s = (sk) => {    
@@ -8,6 +9,7 @@ let s = (sk) => {
   sk.setup = () =>{
     sk.createCanvas(Game.canvasWidth, Game.canvasHeight)
     Game.resetTiles()
+    Game.setPlayerImage(sk.loadImage(img))
   }
 
   sk.draw = () => {
