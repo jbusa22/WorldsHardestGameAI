@@ -25,9 +25,10 @@ export default class Player {
   }
   
   show() {
-    p5.fill(this.red,this.green,this.blue);
-    p5.noStroke()
-    p5.rect(this.center.x, this.center.y, Game.playerSize, Game.playerSize)
+    // p5.fill(this.red,this.green,this.blue);
+    // p5.noStroke()
+    // p5.rect(this.center.x, this.center.y, Game.playerSize, Game.playerSize)
+    p5.image(Game.playerImage, this.center.x, this.center.y, Game.playerSize, Game.playerSize)
   }
 
   setVel(x, y) {
