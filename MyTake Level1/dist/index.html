@@ -4,9 +4,10 @@
 </head>
 
 <body>
-  <input class="rows" type="text">
-  <input class="cols" type="text">
-  <input class="start" type="text">
+  <label for="rows">Rows</label>
+  <input name="rows" class="rows" type="text">
+  <label for="rows">Cols</label>
+  <input name="cols" class="cols" type="text">
   <button id="update-col-rows" type="submit">Submit</button>
   <input type="radio" id="wall" name="tile-gender" checked value="wall">
   <label for="wall">Wall</label><br>
@@ -16,8 +17,10 @@
   <label for="goal">Goal</label>
   <input type="radio" id="start" name="tile-gender" value="start">
   <label for="start">Start</label>
-
-  <button id="lock" type="submit">Lock</button>
+  <label for="walls-kill">Should Walls Kill the Player?</label>
+  <input type="checkbox" name="walls-kill" id="walls-kill" checked>
+  <button id="edit">Edit level</button>
+  <button id="lock" type="submit">Start Game</button>
   <p> hi my name is Jack and this is my thing, I hope you enjoy. Use WASD controls for gameplay </p>
 
   <script src="bundle.js"></script>

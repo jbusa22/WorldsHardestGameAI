@@ -142,7 +142,7 @@ export default class Population {
   //finds the player with the highest fitness and sets it as the best player
    setBestPlayer() {
     var max = 0;
-    var maxIndex = 0;
+    var maxIndex = -1;
     for (var i = 0; i< this.players.length; i++) {
       if (this.players[i].fitness > max) {
         max = this.players[i].fitness;
@@ -150,8 +150,11 @@ export default class Population {
       }
     }
 
+    if (maxIndex === -1) {
+      alert("Make sure the course is possible to complete")
+    }
+    
     this.bestPlayer = maxIndex;
-
     if (max > this.bestFitness) {
       this.bestFitness = max;
       this.genPlayers.push(this.players[this.bestPlayer].gimmeBaby());

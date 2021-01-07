@@ -1,7 +1,12 @@
 import Game from './Game'
+import p5 from './sketch'
 
 document.getElementById("lock").addEventListener("click", (e) => {
   Game.setup()
+})
+
+document.getElementById("edit").addEventListener("click", (e) => {
+  Game.editLevel()
 })
 
 document.querySelectorAll("input[name='tile-gender']").forEach(b => {
@@ -12,30 +17,24 @@ document.querySelectorAll("input[name='tile-gender']").forEach(b => {
   }
 )
 
+document.getElementById("walls-kill").addEventListener("click", (e) => {
+  if (Game.editing) {
+    Game.wallsKill = !Game.wallsKill
+  }
+})
 
 
 document.getElementById("update-col-rows").addEventListener("click", (e) => {
-  let newRows = document.querySelector(".rows").value
-  let newCols = document.querySelector(".cols").value
+  let newRows = Number(document.querySelector(".rows").value) + 2
+  let newCols = Number(document.querySelector(".cols").value) + 2
   if (newRows && newCols) {
-    console.log(newRows, newCols)
-    rows = newRows
-    cols = newCols
-    canvasWidth = tileSize * cols
-    canvasHeight = tileSize * rows
-    setup()
+    Game.rows = newRows 
+    Game.cols = newCols 
+    Game.canvasWidth = Game.tileSize * newCols 
+    Game.canvasHeight = Game.tileSize * newRows
+    p5.createCanvas(Game.canvasWidth, Game.canvasHeight)
+    Game.resetTiles()
+    Game.editing = true
   }
 })
 
-document.querySelector(".start").addEventListener("click", (e) => {
-  let newRows = document.querySelector(".rows").value
-  let newCols = document.querySelector(".cols").value
-  if (newRows && newCols) {
-    console.log(newRows, newCols)
-    Game.rows = newRows
-    Game.cols = newCols
-    Game.canvasWidth = tileSize * cols
-    Game.canvasHeight = tileSize * rows
-    P5.setup()
-  }
-})

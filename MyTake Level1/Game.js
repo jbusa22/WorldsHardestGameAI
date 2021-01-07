@@ -20,6 +20,7 @@ class Game {
       this.dragging = false
       this.editing = true
       this.playerSize = 30
+      this.wallsKill = true
       this.defaultWeight = 100
       this.typeSelected = 'wall'
       this.graph = null
@@ -29,11 +30,17 @@ class Game {
       this.evolutionSpeed = 1
       this.testPopulation = null
       this.mutationRate = 0.01;
-      this.dieOnWall = true;
       this.playerImage = null
       Game.instance = this;
     }
     return Game.instance;
+  }
+
+  editLevel() {
+    this.editing = true
+    this.testPopulation = null
+    this.graph = null
+    this.player = null
   }
 
   resetTiles() {

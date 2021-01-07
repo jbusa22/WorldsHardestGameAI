@@ -62,7 +62,7 @@ export default class Player {
     
     let surroundingWalls = Game.getSurroundingWalls(Game.getTileFromCoords(this.center.x, this.center.y))
     for (let i = 0; i < surroundingWalls.length; i++) {
-      if (Game.dieOnWall) {
+      if (Game.wallsKill) {
         const el = surroundingWalls[i].restrictMovement(this.center, bottomRight, temp);
         if (temp.x != el.x || temp.y != el.y)
           this.die()
