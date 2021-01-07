@@ -19,17 +19,18 @@ class Game {
       this.turnOn = false
       this.dragging = false
       this.editing = true
-      this.playerSize = 20
+      this.playerSize = 30
       this.defaultWeight = 100
       this.typeSelected = 'wall'
       this.graph = null
       this.player = null
       this.humanPlaying = false
-      this.populationSize = 100
+      this.populationSize = 10
       this.evolutionSpeed = 1
       this.testPopulation = null
       this.mutationRate = 0.01;
-      this.dieOnWall = true
+      this.dieOnWall = true;
+      this.playerImage = null
       Game.instance = this;
     }
     return Game.instance;
@@ -42,6 +43,19 @@ class Game {
         this.tiles[i][j] = new Tile(j, i);
       }
     }
+    // set walls
+    for (var i = 0; i< this.rows; i++) {
+      this.tiles[i][0].setEdge()
+      this.tiles[i][this.cols - 1].setEdge()
+    }
+    for (var j = 0; j< this.cols; j++) {
+      this.tiles[0][j].setEdge()
+      this.tiles[this.rows - 1][j].setEdge()
+    }
+  }
+
+  setPlayerImage(img) {
+    this.playerImage = img
   }
 
   drawTiles() {
@@ -154,7 +168,7 @@ class Game {
       let randomSpawnTile = this.getRandomSpawnTile()
       this.player = new HumanPlayer(randomSpawnTile)
     } else {
-      this.testPopulation = new Population(100)
+      this.testPopulation = new Population(this.populationSize)
     }
   }
 
@@ -178,27 +192,6 @@ class Game {
       }
     }
   }
-  
-  // restrictMovement(tl, br, movement) {
-
-  //   var x = movement.x;
-  //   var y = movement.y;
-
-  //   var ptl = p5.createVector(tl.x+movement.x, tl.y);
-  //   var pbr = p5.createVector(br.x+movement.x, br.y);
-
-  //   if ((ptl.x < this.bottomRightPos.x && pbr.x > this.pixelPos.x) &&( ptl.y < this.bottomRightPos.y && pbr.y > this.pixelPos.y)) {
-  //     x=0;
-  //   }
-
-  //   ptl = p5.createVector(tl.x, tl.y +movement.y);
-  //   pbr = p5.createVector(br.x, br.y + movement.y);
-  //   if ((ptl.x <this.bottomRightPos.x && pbr.x > this.pixelPos.x) &&( ptl.y < this.bottomRightPos.y && pbr.y > this.pixelPos.y)) {
-  //     y=0;
-  //   }
-
-  //   return p5.createVector(x, y);
-  // }
 
   getRandomSpawnTile() {
     let spawnTiles = []

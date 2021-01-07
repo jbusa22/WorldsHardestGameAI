@@ -10,6 +10,7 @@ export default class Tile {
     this.red = 0
     this.green = 0
     this.blue = 0
+    this.isEdge = false
     this.changeColor()
   }
 
@@ -29,8 +30,16 @@ export default class Tile {
   clearDrag() {
     this.dragChanged = false
   }
+  
+  setEdge() {
+    this.isEdge = true
+    this.type = 'wall'
+    this.changeColor()
+  }
 
   changeType(newType) {
+    if (this.isEdge)
+      return
     this.type = newType
     this.changeColor()
   }
