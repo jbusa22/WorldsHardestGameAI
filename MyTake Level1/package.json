@@ -27,6 +27,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "babel-polyfill": "^6.26.0",
+    "file-loader": "^6.2.0",
     "fs": "0.0.1-security",
     "p5": "^1.2.0",
     "worker-threads": "^1.0.0"
